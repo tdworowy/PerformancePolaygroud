@@ -14,12 +14,11 @@
     "mocha-typescript": "*",
     "chai": "*",
     "typings": "*",
-    "ts-node": "*"
-  },
-  "scripts": {
-    "pretest": "tsc",
-    "watch": "mocha-typescript-watch",
-    "prepare": "tsc"
+    "ts-node": "*",
+    "express": "*",
+    "node": "*",
+    "web-request": "*",
+    "serve-static": "*"
   },
   "author": "",
   "license": "ISC"
