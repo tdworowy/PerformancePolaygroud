@@ -1,0 +1,26 @@
+{
+  "name": "typescript_playgroud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt": "^1.0.4",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-exec": "^3.0.0",
+    "guid-typescript": "^1.0.9"
+  },
+  "devDependencies": {
+    "guid-typescript": "*",
+    "mocha-typescript": "*",
+    "chai": "*",
+    "typings": "*",
+    "ts-node": "*"
+  },
+  "scripts": {
+    "pretest": "tsc",
+    "watch": "mocha-typescript-watch",
+    "prepare": "tsc"
+  },
+  "author": "",
+  "license": "ISC"
+}
