@@ -1,8 +1,6 @@
 
-//import * as WebRequest from 'web-request';  // don't work becous this import
-
 class HttpClient {
-    getRequest(aUrl:string, aCallback: any) {
+    static getRequest(aUrl:string, aCallback:(response:string) => void ) {
         var anHttpRequest = new XMLHttpRequest();
         anHttpRequest.onreadystatechange = function() { 
             if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
@@ -18,12 +16,11 @@ class RandomString {
     public async render(divId: string) {
         let el: HTMLElement | null = document.getElementById(divId);
         {
-            var client = new HttpClient();
-            client.getRequest('http://localhost:3000', function(response:any) {
+        HttpClient.getRequest('http://localhost:3000', function(response:string) {
                 if(el != null) {
                     el.innerText = response
                 }
-            }); // STILL DON'T WORK
+            }); 
         }
     }
 }

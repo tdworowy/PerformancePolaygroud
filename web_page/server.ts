@@ -5,6 +5,7 @@ const app = express()
 const port = 3000
 
 app.get('/', (request:any, response:any) => {
+    console.log(`Get: ${request}`)
     let text :string = Utils.StringUtils.generateString()
     response.send(text)
   })
