@@ -1,19 +1,18 @@
-import { Utils } from "./utils";
-import http from 'http';
-import express from 'express';
-const app = express()
-const port = 3000
+var http = require('http');
+var fs = require('fs');
 
-app.get('/', (request:any, response:any) => {
-    console.log(`Get: ${request}`)
-    let text :string = Utils.StringUtils.generateString()
-    response.send(text)
-  })
-  
-  app.listen(port, (err:any) => {
+const PORT=8081; 
+
+fs.readFile('./index.html', function (err:any, html:any) {
+
     if (err) {
-      return console.log('something bad happened', err)
-    }
-  
-    console.log(`server is listening on ${port}`)
-  })
+        console.log(err)
+        throw err;
+    }    
+
+    http.createServer(function(request:any, response:any) {  
+        response.writeHeader(200, {"Content-Type": "text/html"});  
+        response.write(html);  
+        response.end();  
+    }).listen(PORT);
+});

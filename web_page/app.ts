@@ -1,6 +1,6 @@
 
 class HttpClient {
-    static getRequest(aUrl:string, aCallback:(response:string) => void ) {
+    static getRequest(aUrl:string, aCallback:(response:any) => void ) {
         var anHttpRequest = new XMLHttpRequest();
         anHttpRequest.onreadystatechange = function() { 
             if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
@@ -13,18 +13,16 @@ class HttpClient {
 }
 
 class RandomString {
-    public async render(divId: string) {
-        let el: HTMLElement | null = document.getElementById(divId);
-        {
-        HttpClient.getRequest('http://localhost:3000', function(response:string) {
+    static render(divId: string) {
+        var el: HTMLElement | null = document.getElementById(divId);
+        
+        HttpClient.getRequest('http://localhost:3000', function(response:any) {
                 if(el != null) {
                     el.innerText = response
                 }
             }); 
-        }
     }
 }
 window.onload = () => {
-    var randomString = new RandomString();
-    randomString.render("content")
+    RandomString.render("content")
 };
