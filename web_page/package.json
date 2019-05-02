@@ -18,7 +18,8 @@
     "express": "*",
     "node": "*",
     "web-request": "*",
-    "serve-static": "*"
+    "serve-static": "*",
+    "connect": "*"
   },
   "author": "",
   "license": "ISC"

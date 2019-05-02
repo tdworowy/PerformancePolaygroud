@@ -7,6 +7,8 @@ const port = 3000
 app.get('/', (request:any, response:any) => {
     console.log(`Get: ${request}`)
     let text :string = Utils.StringUtils.generateString()
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.header('Access-Control-Allow-Methods', 'GET');
     response.send(text)
   })
   
