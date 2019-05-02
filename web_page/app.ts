@@ -15,7 +15,9 @@ class HttpClient {
 class RandomString {
     static render(divId: string) {
         var el: HTMLElement | null = document.getElementById(divId);
-        
+        if(el != null) {
+            el.innerText = "Waiting..."
+        }
         HttpClient.getRequest('http://localhost:3000', function(response:any) {
                 if(el != null) {
                     el.innerText = response
