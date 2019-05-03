@@ -5,7 +5,7 @@ const app = express()
 const port = 3000
 
 app.get('/', (request:any, response:any) => {
-    console.log(`Get: ${request}`)
+    console.log(`Request: ${request}`)
     let text :string = Utils.StringUtils.generateString()
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", 'GET');
