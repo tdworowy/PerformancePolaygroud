@@ -4,8 +4,10 @@ var app = connect()
     .use(serveStatic(__dirname))
     .use(function(req:any, res:any){
 
+        
+        console.log(req)
         res.setHeader("Access-Control-Allow-Origin", "*");
-        res.header('Access-Control-Allow-Methods', 'GET');
+        res.setHeader("Access-Control-Allow-Methods", 'GET');
         
     });
 app.listen(8081, function(){

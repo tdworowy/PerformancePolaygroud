@@ -8,7 +8,7 @@ app.get('/', (request:any, response:any) => {
     console.log(`Get: ${request}`)
     let text :string = Utils.StringUtils.generateString()
     response.setHeader("Access-Control-Allow-Origin", "*");
-    response.header('Access-Control-Allow-Methods', 'GET');
+    response.setHeader("Access-Control-Allow-Methods", 'GET');
     response.send(text)
   })
   
@@ -17,5 +17,5 @@ app.get('/', (request:any, response:any) => {
       return console.log('something bad happened', err)
     }
   
-    console.log(`server is listening on ${port}`)
+    console.log(`service is listening on ${port}`)
   })
