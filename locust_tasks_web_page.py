@@ -6,8 +6,8 @@ class WebsiteTasks(TaskSet):
        print("Start tests.")
 
     @task
-    def blog_main(self):
-        self.client.get("http://localhost:8083/blog/")
+    def get(self):
+        self.client.get("http://localhost:8081/")
 
 
 class WebsiteUser(HttpLocust):

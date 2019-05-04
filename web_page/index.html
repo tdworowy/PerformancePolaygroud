@@ -6,15 +6,29 @@
     </head>
     <body> 
         <div id ="form">
-            <form action="http://localhost:3000/data" method="POST">
+            <form id ="form1" action="http://localhost:3000/data" method="POST">
                 Data1:<br>
-                <input type="text" name="Data1"><br>
+                <input type="text" name="Data1" id="data1"><br>
                 Data2:<br>
-                <input type="text" name="Data2">
-                <input type="submit" value="Submit">
+                <input type="text" name="Data2" id="data2">
+                <input type="button" value="Submit"  onclick="submitform()">
             </form>
         </div>
         <div id ="content"></div>
     </body>
     <script src="app.js"></script>
+
+<script type="text/javascript">
+    function submitform(){
+        let form = document.forms.namedItem("form1");
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", form.action, true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        var j = {
+            "data1":document.getElementById("data1").value,
+            "data2": document.getElementById("data2").value,
+        };
+        xhr.send(JSON.stringify(j));
+    }
+</script> 
 </html>

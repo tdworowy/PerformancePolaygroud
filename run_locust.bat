@@ -1,1 +1,1 @@
-locust -f locust_tasks_blog.py --host=http://localhost:8083
+locust -f locust_tasks_web_page.py --host=http://localhost:8081
