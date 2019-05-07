@@ -4,6 +4,12 @@
   "description": "",
   "main": "Gruntfile.js",
   "dependencies": {
+    "@types/express": "*",
+    "@types/mocha": "*",
+    "@types/chai": "*",
+    "@types/node": "*",
+    "@types/serve-static": "*",
+    "@types/connect": "*",
     "grunt": "^1.0.4",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-exec": "^3.0.0",
@@ -11,13 +17,11 @@
   },
   "devDependencies": {
     "guid-typescript": "*",
-    "mocha-typescript": "*",
+    "mocha": "*",
     "chai": "*",
-    "typings": "*",
     "ts-node": "*",
     "express": "*",
     "node": "*",
-    "web-request": "*",
     "serve-static": "*",
     "connect": "*"
   },
