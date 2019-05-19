@@ -1,4 +1,4 @@
-import { Utils } from "./utils";
+import { StringUtils } from "./my_utils";
 import express from 'express';
 var bodyParser = require("body-parser");
 const app = express()
@@ -8,7 +8,7 @@ app.use(bodyParser.json())
 
 app.get('/', (request:any, response:any) => {
     console.log(`Request GET: ${request}`)
-    let text :string = Utils.StringUtils.generateString()
+    let text :string = StringUtils.generateString()
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", 'GET');
     response.send(text)

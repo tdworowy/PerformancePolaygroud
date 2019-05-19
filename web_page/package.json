@@ -5,19 +5,19 @@
   "main": "Gruntfile.js",
   "dependencies": {
     "@types/express": "*",
-    "@types/mocha": "*",
     "@types/chai": "*",
     "@types/node": "*",
     "@types/serve-static": "*",
     "@types/connect": "*",
+    "@types/jasmine": "^3.3.12",
+    "@types/uuid": "*",
+    "uuid": "*",
+    "jasmine": "^3.4.0",
     "grunt": "^1.0.4",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-exec": "^3.0.0",
-    "guid-typescript": "^1.0.9"
+    "grunt-exec": "^3.0.0"
   },
   "devDependencies": {
-    "guid-typescript": "*",
-    "mocha": "*",
     "chai": "*",
     "ts-node": "*",
     "express": "*",
