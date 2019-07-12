@@ -20,12 +20,17 @@ class MySimulation extends Simulation {
 	object GetData {
 		val getData = exec(http("get data")
 			.get("/")
-			.check(status.is(session => 200)))
-		
+			.check(status.is(session => 200))
+			.check(bodyString.transform(_.size > 2999).is(true))
+			.check(bodyString.saveAs( "RESPONSE_DATA" )) 
+		)
+		.exec( session => {
+  			println( session( "RESPONSE_DATA" ).as[String] )
+  			session
+		})  
 	}
 	
 	object PostData {
-		
 		val postData = exec(
 			http("Post example data")
 			.post("/data")
@@ -37,10 +42,9 @@ class MySimulation extends Simulation {
 			.post("/data")
 			.body(StringBody(_ => """{ "data1": """" + random.alphanumeric.take(3000).mkString + """", "data2": """" + random.alphanumeric.take(3000).mkString + """" }""")).asJson
 			.check(status.is(session => 200))
+			.check(bodyString.is("OK"))
 		)
 	}
-
-
 	val scn1 = scenario("GetData")
 		.exec(GetData.getData)	
 	val scn2 = scenario("PostData")
@@ -56,7 +60,7 @@ class MySimulation extends Simulation {
 				.pause(1,3)
 		 }
 	setUp(
-		scn1.inject(atOnceUsers(5)),
+		scn1.inject(atOnceUsers(10)),
 		scn2.inject(rampUsers(5) during (3 seconds)),
 		scn3.inject(rampUsers(5) during (3 seconds))		
 		)
