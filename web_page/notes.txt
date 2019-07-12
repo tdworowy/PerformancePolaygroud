@@ -1,2 +1,2 @@
 node service
-node server2
+node server

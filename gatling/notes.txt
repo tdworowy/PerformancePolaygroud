@@ -1,1 +1,1 @@
-mvn gatling:test -Dgatling.simulationClass=computerdatabase.BasicSimulation
+mvn gatling:test -Dgatling.simulationClass=MySimulation
