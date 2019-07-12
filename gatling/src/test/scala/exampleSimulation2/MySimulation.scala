@@ -25,12 +25,17 @@ class MySimulation extends Simulation {
 	}
 	
 	object PostData {
-		val randomString1 = random.alphanumeric.take(20).mkString
-		val raindomSting2 = random.alphanumeric.take(20).mkString
+		
 		val postData = exec(
 			http("Post example data")
 			.post("/data")
-			.body(StringBody("""{ "data1": "${randomString1}", "data2": "${randomString2}" }"""))//.asJSON 
+			.body(StringBody(_ => """{ "data1": """" + random.alphanumeric.take(20).mkString + """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
+			.check(status.is(session => 200))
+		)
+		val postBigData = exec(
+			http("Post example data")
+			.post("/data")
+			.body(StringBody(_ => """{ "data1": """" + random.alphanumeric.take(3000).mkString + """", "data2": """" + random.alphanumeric.take(3000).mkString + """" }""")).asJson
 			.check(status.is(session => 200))
 		)
 	}
@@ -44,9 +49,16 @@ class MySimulation extends Simulation {
 					PostData.postData)
 				.pause(1,3)
 		 }
+	val scn3 = scenario("PostBigData")
+		.repeat(8) {
+				exec(
+					PostData.postBigData)
+				.pause(1,3)
+		 }
 	setUp(
 		scn1.inject(atOnceUsers(5)),
-		scn2.inject(rampUsers(5) during (3 seconds))		
+		scn2.inject(rampUsers(5) during (3 seconds)),
+		scn3.inject(rampUsers(5) during (3 seconds))		
 		)
 		.protocols(httpProtocol)
 		.assertions(global.responseTime.max.lt(500))

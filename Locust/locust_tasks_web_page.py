@@ -22,8 +22,8 @@ class WebsiteTasks(TaskSet):
     @task
     def post_data(self):
         data = {
-             "data1": "TestData1",
-             "data2":  "TestData2"
+             "data1": random_string(20),
+             "data2":  random_string(20)
         }
         headers = {'Content-Type': 'application/json'}
         self.client.post("http://localhost:3000/data",  json=data, headers=headers)

@@ -7,23 +7,22 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json())
 
 app.get('/', (request:any, response:any) => {
-    console.log(`Request GET: ${request}`)
     let text :string = StringUtils.generateString()
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", 'GET');
     response.send(text)
+    console.log(`Request GET`)
   })
 app.post('/data', (request:any, response:any) => {
-    console.log(`Request POST`)
-    console.log(`data1: ${request.body.data1}`)
-    console.log(`data2: ${request.body.data2}`)
+    console.log(`Request POST: ${JSON.stringify(request.body)}`)
+    
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     response.setHeader("Access-Control-Allow-Headers", "accept, content-type");
     response.send("OK")
   })
 app.options('/data', (request:any, response:any) => {
-    console.log(`Request POST: ${request.body}`)
+    console.log(`Request Options`)
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     response.setHeader("Access-Control-Allow-Headers", "accept, content-type");
