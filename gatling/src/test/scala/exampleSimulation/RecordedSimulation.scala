@@ -68,6 +68,6 @@ class RecordedSimulation extends Simulation {
 		scn2.inject(rampUsers(5) during (15 seconds))		
 		)
 		.protocols(httpProtocol)
-		.assertions(global.responseTime.max.lt(300))
+		.assertions(global.responseTime.max.lt(500))
 		.assertions(forAll.failedRequests.percent.lte(2))
 }
