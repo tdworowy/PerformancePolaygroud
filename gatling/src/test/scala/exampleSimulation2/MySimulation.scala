@@ -23,28 +23,28 @@ class MySimulation extends Simulation {
 			.check(status.is(session => 200))
 			.check(bodyString.transform(_.size > 2999).is(true))
 			.check(bodyString.saveAs( "RESPONSE_DATA" )) 
-		)
-		.exec( session => {
-  			println( session( "RESPONSE_DATA" ).as[String] )
-  			session
-		})  
+			)
+			.exec( session => {
+				println( session( "RESPONSE_DATA" ).as[String] )
+				session
+			})  
 	}
 	object PutData {
 		val getKeys = exec(http("Get Keys")
 			.get("/data")
 			.check(status.is(session => 200))
 			.check(regex( "(?<=key:).*?(?=\")").findAll.saveAs( "KEYS" )) 
-		)
-		.exec( session => {
-			println( session( "KEYS" ).as[String] )
-			session
-		})
+			)
+			.exec( session => {
+				println( session( "KEYS" ).as[String] )
+				session
+			})
 		val putData = exec(http("Put Data")
 		 	.put(session => {
 				var keys = session( "KEYS" ).as[Seq[String]]
   				"/" + keys(random.nextInt(keys.length))
-		})
-		 	.body(StringBody(_ => """{ "data1": """" + random.alphanumeric.take(20).mkString + """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
+			})
+		 	.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString + """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
 		 )  
 	}
 	
@@ -52,19 +52,20 @@ class MySimulation extends Simulation {
 		val postData = exec(
 			http("Post example data")
 			.post("/data")
-			.body(StringBody(_ => """{ "data1": """" + random.alphanumeric.take(20).mkString + """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
+			.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString + """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
 			.check(status.is(session => 200))
 		)
 		val postBigData = exec(
 			http("Post example data")
 			.post("/data")
-			.body(StringBody(_ => """{ "data1": """" + random.alphanumeric.take(3000).mkString + """", "data2": """" + random.alphanumeric.take(3000).mkString + """" }""")).asJson
+			.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(3000).mkString + """", "data2": """" + random.alphanumeric.take(3000).mkString + """" }""")).asJson
 			.check(status.is(session => 200))
 			.check(bodyString.is("OK"))
 		)
 	}
 	val getScenario = scenario("GetData")
 		.exec(GetData.getData)	
+	
 	val postScenario = scenario("PostData")
 		.repeat(8) {
 				exec(
@@ -81,7 +82,7 @@ class MySimulation extends Simulation {
 		.exec(PutData.getKeys,
 			  PutData.putData)
 		.pause(1,3)
-		
+
 	setUp(
 		getScenario.inject(atOnceUsers(10)),
 		postScenario.inject(rampUsers(5) during (3 seconds)),

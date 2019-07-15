@@ -10,19 +10,19 @@ import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Test;
 
+
 public class AppTest {
 
-    @Test
-    public void exampleTest(){
-    //public static void main(String[] args){
+    //@Test
+    //public void exampleTest(){
+    public static void main(String[] args){
         // Engine
         StandardJMeterEngine jm = new StandardJMeterEngine();
         // jmeter.properties
         JMeterUtils.loadJMeterProperties("jmeter.properties");
 
         HashTree hashTree = new HashTree();     
-        //Config 
-        
+
         // HTTP Sampler
         HTTPSampler getData = new HTTPSampler();
         getData.setDomain("localhost");
@@ -40,17 +40,17 @@ public class AppTest {
         
 
         // Loop Controller
-        TestElement loopCtrl = new LoopController();
-        ((LoopController)loopCtrl).setLoops(1);
-        ((LoopController)loopCtrl).addTestElement(getData);
-        ((LoopController)loopCtrl).addTestElement(postData);
-        ((LoopController)loopCtrl).setFirst(true);
+        LoopController loopCtrl = new LoopController();
+        loopCtrl.setLoops(1);
+        loopCtrl.addTestElement(getData);
+        loopCtrl.addTestElement(postData);
+        loopCtrl.setFirst(true);
 
         // Thread Group
         SetupThreadGroup threadGroup = new SetupThreadGroup();
         threadGroup.setNumThreads(1);
         threadGroup.setRampUp(1);
-        threadGroup.setSamplerController((LoopController)loopCtrl);
+        threadGroup.setSamplerController(loopCtrl);
 
         // Test plan
         TestPlan testPlan = new TestPlan("TEST PLAN");
