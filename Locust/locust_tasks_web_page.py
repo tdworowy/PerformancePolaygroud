@@ -1,6 +1,7 @@
+import datetime
 import random
 import string
-
+import re
 from locust import HttpLocust, TaskSet, task
 
 
@@ -12,12 +13,23 @@ class WebsiteTasks(TaskSet):
        print("Start test.")
 
     @task
-    def get_main(self):
-        self.client.get("http://localhost:8081/")
+    def get_service(self):
+        self.client.get("/")
 
     @task
-    def get_service(self):
-        self.client.get("http://localhost:3000")
+    def put_data(self):
+        data = {
+            "data1": random_string(20),
+            "data2": random_string(20)
+        }
+        headers = {'Content-Type': 'application/json'}
+
+        keys = re.findall("(?<=key:).*?(?=\")", self.client.get("/data").text)
+
+        response = self.client.put("/%s" % random.choices(keys),  json=data, headers=headers)
+
+        assert response.status_code is 200, "Unexpected response code: " + response.status_code
+        assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
 
     @task
     def post_data(self):
@@ -26,7 +38,10 @@ class WebsiteTasks(TaskSet):
              "data2":  random_string(20)
         }
         headers = {'Content-Type': 'application/json'}
-        self.client.post("http://localhost:3000/data",  json=data, headers=headers)
+        response = self.client.post("/data",  json=data, headers=headers)
+
+        assert response.status_code is 200, "Unexpected response code: " + response.status_code
+        assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
 
     @task
     def post_big_data(self):
@@ -35,7 +50,10 @@ class WebsiteTasks(TaskSet):
             "data2": random_string(3000)
         }
         headers = {'Content-Type': 'application/json'}
-        self.client.post("http://localhost:3000/data", json=data, headers=headers)
+        response = self.client.post("/data", json=data, headers=headers)
+
+        assert response.status_code is 200, "Unexpected response code: " + response.status_code
+        assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
 
 class WebsiteUser(HttpLocust):
     task_set = WebsiteTasks

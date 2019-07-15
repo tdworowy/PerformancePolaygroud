@@ -1,1 +1,1 @@
-locust -f locust_tasks_web_page.py --host=http://localhost:8081 --loglevel=DEBUG
+locust -f locust_tasks_web_page.py --host=http://localhost:3000 --loglevel=DEBUG
