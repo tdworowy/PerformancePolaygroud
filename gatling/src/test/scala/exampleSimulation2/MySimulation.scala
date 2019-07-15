@@ -29,6 +29,24 @@ class MySimulation extends Simulation {
   			session
 		})  
 	}
+	object PutData {
+		val getKeys = exec(http("Get Keys")
+			.get("/data")
+			.check(status.is(session => 200))
+			.check(regex( "(?<=key:).*?(?=\")").findAll.saveAs( "KEYS" )) 
+		)
+		.exec( session => {
+			println( session( "KEYS" ).as[String] )
+			session
+		})
+		val putData = exec(http("Put Data")
+		 	.put(session => {
+				var keys = session( "KEYS" ).as[Seq[String]]
+  				"/" + keys(random.nextInt(keys.length))
+		})
+		 	.body(StringBody(_ => """{ "data1": """" + random.alphanumeric.take(20).mkString + """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
+		 )  
+	}
 	
 	object PostData {
 		val postData = exec(
@@ -45,24 +63,30 @@ class MySimulation extends Simulation {
 			.check(bodyString.is("OK"))
 		)
 	}
-	val scn1 = scenario("GetData")
+	val getScenario = scenario("GetData")
 		.exec(GetData.getData)	
-	val scn2 = scenario("PostData")
+	val postScenario = scenario("PostData")
 		.repeat(8) {
 				exec(
 					PostData.postData)
 				.pause(1,3)
 		 }
-	val scn3 = scenario("PostBigData")
+	val postBigDataScenario = scenario("PostBigData")
 		.repeat(8) {
 				exec(
 					PostData.postBigData)
 				.pause(1,3)
 		 }
+	val putScenario = scenario("PutData")
+		.exec(PutData.getKeys,
+			  PutData.putData)
+		.pause(1,3)
+		
 	setUp(
-		scn1.inject(atOnceUsers(10)),
-		scn2.inject(rampUsers(5) during (3 seconds)),
-		scn3.inject(rampUsers(5) during (3 seconds))		
+		getScenario.inject(atOnceUsers(10)),
+		postScenario.inject(rampUsers(5) during (3 seconds)),
+		postBigDataScenario.inject(rampUsers(5) during (3 seconds)),
+		putScenario.inject(rampUsers(5) during (3 seconds))			
 		)
 		.protocols(httpProtocol)
 		.assertions(global.responseTime.max.lt(500))

@@ -36,13 +36,13 @@ app.get('/:key', (request:any, response:any) => {
     
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", 'PUT');
-    data[request.params.key] = JSON.stringify(request.body)
+    data[`key:${request.params.key}`] = JSON.stringify(request.body)
     response.send("Ok")
     console.log(`Request PUT: ${JSON.stringify(request.body)}`)
   })
 app.post('/data', (request:any, response:any) => {
     console.log(`Request POST: ${JSON.stringify(request.body)}`)
-    data[uuid()] = JSON.stringify(request.body)
+    data[`key:${uuid()}`] = JSON.stringify(request.body)
     
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
