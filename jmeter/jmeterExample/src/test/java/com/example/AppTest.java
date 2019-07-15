@@ -1,14 +1,18 @@
-package com.example;
+package test.java.com.example;
 
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.protocol.http.sampler.HTTPSampler;
+import org.apache.jmeter.save.SaveService;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.TestPlan;
 import org.apache.jmeter.threads.SetupThreadGroup;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Test;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class AppTest {
@@ -20,6 +24,8 @@ public class AppTest {
         StandardJMeterEngine jm = new StandardJMeterEngine();
         // jmeter.properties
         JMeterUtils.loadJMeterProperties("jmeter.properties");
+        JMeterUtils.setJMeterHome("D:\\jmeter\\apache-jmeter-5.1.1\\"); //Path to jmeter
+        JMeterUtils.initLocale();
 
         HashTree hashTree = new HashTree();     
 
@@ -59,10 +65,17 @@ public class AppTest {
         hashTree.add("loopCtrl", loopCtrl);
         hashTree.add("threadGroup", threadGroup);
         hashTree.add("getData", getData);
-        hashTree.add("postData", postData);         
+        hashTree.add("postData", postData);
+
+        try {
+            SaveService.saveTree(hashTree, new FileOutputStream(
+                    "test.jmx"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         jm.configure(hashTree);
-
         jm.run();
+
     }
 }

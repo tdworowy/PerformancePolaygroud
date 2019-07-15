@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
+  <org.apache.jorphan.collections.HashTree>
+    <java.lang.String>threadGroup</java.lang.String>
+    <org.apache.jorphan.collections.HashTree>
+      <SetupThreadGroup>
+        <intProp name="ThreadGroup.num_threads">1</intProp>
+        <intProp name="ThreadGroup.ramp_time">1</intProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">1</intProp>
+        </elementProp>
+      </SetupThreadGroup>
+      <org.apache.jorphan.collections.HashTree/>
+    </org.apache.jorphan.collections.HashTree>
+    <java.lang.String>testPlan</java.lang.String>
+    <org.apache.jorphan.collections.HashTree>
+      <TestPlan testname="TEST PLAN"/>
+      <org.apache.jorphan.collections.HashTree/>
+    </org.apache.jorphan.collections.HashTree>
+    <java.lang.String>loopCtrl</java.lang.String>
+    <org.apache.jorphan.collections.HashTree>
+      <LoopController>
+        <boolProp reference="../../../org.apache.jorphan.collections.HashTree/SetupThreadGroup/elementProp/boolProp"/>
+        <intProp reference="../../../org.apache.jorphan.collections.HashTree/SetupThreadGroup/elementProp/intProp"/>
+      </LoopController>
+      <org.apache.jorphan.collections.HashTree/>
+    </org.apache.jorphan.collections.HashTree>
+    <java.lang.String>postData</java.lang.String>
+    <org.apache.jorphan.collections.HashTree>
+      <HTTPSampler__>
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="body" elementType="HTTPArgument">
+              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+              <stringProp name="Argument.name">body</stringProp>
+              <stringProp name="Argument.value">{ &quot;data1&quot;: &quot;${__RandomString(20,abcdefg)}&quot;, &quot;data2&quot;:  &quot;${__RandomString(20,abcdefg)}&quot;}&quot;</stringProp>
+              <stringProp name="Argument.metadata"></stringProp>
+            </elementProp>
+          </collectionProp>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">localhost</stringProp>
+        <intProp name="HTTPSampler.port">3000</intProp>
+        <stringProp name="HTTPSampler.path">/data</stringProp>
+        <stringProp name="HTTPSampler.method">POST</stringProp>
+        <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+      </HTTPSampler__>
+      <org.apache.jorphan.collections.HashTree/>
+    </org.apache.jorphan.collections.HashTree>
+    <java.lang.String>getData</java.lang.String>
+    <org.apache.jorphan.collections.HashTree>
+      <HTTPSampler__>
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">localhost</stringProp>
+        <intProp name="HTTPSampler.port">3000</intProp>
+        <stringProp name="HTTPSampler.path">/</stringProp>
+        <stringProp name="HTTPSampler.method">GET</stringProp>
+      </HTTPSampler__>
+      <org.apache.jorphan.collections.HashTree/>
+    </org.apache.jorphan.collections.HashTree>
+  </org.apache.jorphan.collections.HashTree>
+</jmeterTestPlan>
