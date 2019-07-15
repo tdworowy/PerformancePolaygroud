@@ -1,6 +1,9 @@
 package test.java.com.example;
 
+import org.apache.jmeter.JMeter;
 import org.apache.jmeter.control.LoopController;
+import org.apache.jmeter.control.gui.TestPlanGui;
+import org.apache.jmeter.engine.JMeterEngineException;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.protocol.http.sampler.HTTPSampler;
 import org.apache.jmeter.save.SaveService;
@@ -42,8 +45,7 @@ public class AppTest {
         postData.setPath("/data");
         postData.setMethod("POST");
         postData.setPostBodyRaw(true);
-        postData.addNonEncodedArgument("body", "{ \"data1\": \"${__RandomString(20,abcdefg)}\", \"data2\":  \"${__RandomString(20,abcdefg)}\"}\"", "");
-        
+        postData.addNonEncodedArgument("body", "data1:Test1,data2:Test2" , null); // Not exactly as it should be
 
         // Loop Controller
         LoopController loopCtrl = new LoopController();
@@ -60,12 +62,16 @@ public class AppTest {
 
         // Test plan
         TestPlan testPlan = new TestPlan("TEST PLAN");
+        testPlan.setProperty(TestElement.TEST_CLASS, TestPlan.class.getName());
+        testPlan.setProperty(TestElement.GUI_CLASS, TestPlanGui.class.getName());
 
-        hashTree.add("testPlan", testPlan);
-        hashTree.add("loopCtrl", loopCtrl);
-        hashTree.add("threadGroup", threadGroup);
-        hashTree.add("getData", getData);
-        hashTree.add("postData", postData);
+        hashTree.add(testPlan);
+        hashTree.add(testPlan, loopCtrl);
+        hashTree.add(testPlan, threadGroup);
+        hashTree.add(testPlan, getData);
+        hashTree.add(testPlan, postData);
+
+        jm.configure(hashTree);
 
         try {
             SaveService.saveTree(hashTree, new FileOutputStream(
@@ -73,9 +79,15 @@ public class AppTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        jm.configure(hashTree);
-        jm.run();
+        try {
+            jm.runTest();
+            while (jm.isActive()) {
+                Thread.sleep(1000);
+            }
+        } catch (JMeterEngineException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        //jm.run();
 
     }
 }
