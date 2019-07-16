@@ -8,54 +8,74 @@ from locust import HttpLocust, TaskSet, task
 def random_string(length):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
+
+def get_service(self):
+    """
+    :param self: TaskSet object
+    """
+    self.client.get("/")
+
+def put_data(self):
+    """
+    :param self: TaskSet object
+    """
+    data = {
+            "data1": random_string(20),
+            "data2": random_string(20)
+           }
+    headers = {'Content-Type': 'application/json'}
+
+    keys = re.findall("(?<=key:).*?(?=\")", self.client.get("/data").text)
+
+    response = self.client.put("/%s" % random.choices(keys),  json=data, headers=headers)
+
+    assert response.status_code is 200, "Unexpected response code: " + response.status_code
+    assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
+
+def post_data(self, data_size):
+    """
+    :param self: TaskSet object
+    :param data_size: number
+
+    """
+    data = {
+             "data1": random_string(data_size),
+             "data2":  random_string(data_size)
+        }
+    headers = {'Content-Type': 'application/json'}
+    response = self.client.post("/data",  json=data, headers=headers)
+
+    assert response.status_code is 200, "Unexpected response code: " + response.status_code
+    assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
+
 class ApiTasks1(TaskSet):
     def on_start(self):
-       print("Start test.")
+       print("ApiTasks1 start.")
 
     @task
     def get_service(self):
-        self.client.get("/")
+        get_service(self)
 
     @task
     def put_data(self):
-        data = {
-            "data1": random_string(20),
-            "data2": random_string(20)
-        }
-        headers = {'Content-Type': 'application/json'}
-
-        keys = re.findall("(?<=key:).*?(?=\")", self.client.get("/data").text)
-
-        response = self.client.put("/%s" % random.choices(keys),  json=data, headers=headers)
-
-        assert response.status_code is 200, "Unexpected response code: " + response.status_code
-        assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
+        put_data(self)
 
     @task
     def post_data(self):
-        data = {
-             "data1": random_string(20),
-             "data2":  random_string(20)
-        }
-        headers = {'Content-Type': 'application/json'}
-        response = self.client.post("/data",  json=data, headers=headers)
-
-        assert response.status_code is 200, "Unexpected response code: " + response.status_code
-        assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
+        post_data(self,20)
 
 
 class ApiTasks2(TaskSet):
+    def on_start(self):
+       print("ApiTasks2 start.")
+
+    @task
+    def get_service(self):
+        get_service(self)
+
     @task
     def post_big_data(self):
-        data = {
-            "data1": random_string(3000),
-            "data2": random_string(3000)
-        }
-        headers = {'Content-Type': 'application/json'}
-        response = self.client.post("/data", json=data, headers=headers)
-
-        assert response.status_code is 200, "Unexpected response code: " + response.status_code
-        assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
+        post_data(self,3000)
 
 
 class ApiUser1(HttpLocust):
