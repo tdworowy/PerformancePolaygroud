@@ -1,6 +1,6 @@
-package test.java.com.example;
+package com.example;
 
-import org.apache.jmeter.JMeter;
+import jodd.net.URLDecoder;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.control.gui.TestPlanGui;
 import org.apache.jmeter.engine.JMeterEngineException;
@@ -14,19 +14,26 @@ import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 
 
 public class AppTest {
 
-    //@Test
-    //public void exampleTest(){
-    public static void main(String[] args){
+    @Test
+    public void exampleTest(){
+        File properties = new File(
+                getClass().getClassLoader().getResource("jmeter.properties").getFile()
+        );
+
         // Engine
         StandardJMeterEngine jm = new StandardJMeterEngine();
         // jmeter.properties
-        JMeterUtils.loadJMeterProperties("jmeter.properties");
+        JMeterUtils.loadJMeterProperties(properties.getPath());
         JMeterUtils.setJMeterHome("D:\\jmeter\\apache-jmeter-5.1.1\\"); //Path to jmeter
         JMeterUtils.initLocale();
 

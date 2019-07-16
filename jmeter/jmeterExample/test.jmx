@@ -3,21 +3,6 @@
   <org.apache.jorphan.collections.HashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="TEST PLAN"/>
     <org.apache.jorphan.collections.HashTree>
-      <LoopController>
-        <boolProp name="LoopController.continue_forever">false</boolProp>
-        <intProp name="LoopController.loops">1</intProp>
-      </LoopController>
-      <org.apache.jorphan.collections.HashTree/>
-      <HTTPSampler__>
-        <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-          <collectionProp name="Arguments.arguments"/>
-        </elementProp>
-        <stringProp name="HTTPSampler.domain">localhost</stringProp>
-        <intProp name="HTTPSampler.port">3000</intProp>
-        <stringProp name="HTTPSampler.path">/</stringProp>
-        <stringProp name="HTTPSampler.method">GET</stringProp>
-      </HTTPSampler__>
-      <org.apache.jorphan.collections.HashTree/>
       <HTTPSampler__>
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
           <collectionProp name="Arguments.arguments">
@@ -36,14 +21,29 @@
         <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
       </HTTPSampler__>
       <org.apache.jorphan.collections.HashTree/>
+      <HTTPSampler__>
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">localhost</stringProp>
+        <intProp name="HTTPSampler.port">3000</intProp>
+        <stringProp name="HTTPSampler.path">/</stringProp>
+        <stringProp name="HTTPSampler.method">GET</stringProp>
+      </HTTPSampler__>
+      <org.apache.jorphan.collections.HashTree/>
       <SetupThreadGroup>
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController">
-          <boolProp reference="../../../LoopController/boolProp"/>
-          <intProp reference="../../../LoopController/intProp"/>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">1</intProp>
         </elementProp>
       </SetupThreadGroup>
+      <org.apache.jorphan.collections.HashTree/>
+      <LoopController>
+        <boolProp reference="../../SetupThreadGroup/elementProp/boolProp"/>
+        <intProp reference="../../SetupThreadGroup/elementProp/intProp"/>
+      </LoopController>
       <org.apache.jorphan.collections.HashTree/>
     </org.apache.jorphan.collections.HashTree>
   </org.apache.jorphan.collections.HashTree>
