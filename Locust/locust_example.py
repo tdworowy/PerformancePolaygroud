@@ -5,23 +5,28 @@ import re
 from locust import HttpLocust, TaskSet, task
 
 
-def random_string(length):
+def random_string(length: int) -> str:
+    """
+    :param length: length of new random string.
+    :return: random string.
+    """
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 
-def get_service(self):
+def get_service(self: TaskSet):
     """
-    :param self: TaskSet object
+    :param self: TaskSet object.
     """
     self.client.get("/")
 
-def put_data(self):
+def put_data(self: TaskSet, data_size: int = 20):
     """
-    :param self: TaskSet object
+    :param self: TaskSet object.
+    :param data_size: length of data string.
     """
     data = {
-            "data1": random_string(20),
-            "data2": random_string(20)
+            "data1": random_string(data_size),
+            "data2": random_string(data_size)
            }
     headers = {'Content-Type': 'application/json'}
 
@@ -32,11 +37,10 @@ def put_data(self):
     assert response.status_code is 200, "Unexpected response code: " + response.status_code
     assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
 
-def post_data(self, data_size):
+def post_data(self: TaskSet, data_size: int):
     """
-    :param self: TaskSet object
-    :param data_size: number
-
+    :param self: TaskSet object.
+    :param data_size: length of data string.
     """
     data = {
              "data1": random_string(data_size),
