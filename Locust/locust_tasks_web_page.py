@@ -8,7 +8,7 @@ from locust import HttpLocust, TaskSet, task
 def random_string(length):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
-class WebsiteTasks(TaskSet):
+class ApiTasks1(TaskSet):
     def on_start(self):
        print("Start test.")
 
@@ -43,6 +43,8 @@ class WebsiteTasks(TaskSet):
         assert response.status_code is 200, "Unexpected response code: " + response.status_code
         assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
 
+
+class ApiTasks2(TaskSet):
     @task
     def post_big_data(self):
         data = {
@@ -55,7 +57,13 @@ class WebsiteTasks(TaskSet):
         assert response.status_code is 200, "Unexpected response code: " + response.status_code
         assert response.elapsed < datetime.timedelta(seconds=2), "Request took more than 2 second"
 
-class WebsiteUser(HttpLocust):
-    task_set = WebsiteTasks
+
+class ApiUser1(HttpLocust):
+    task_set = ApiTasks1
+    min_wait = 2000
+    max_wait = 5000
+
+class ApiUser2(HttpLocust):
+    task_set = ApiTasks2
     min_wait = 2000
     max_wait = 5000
