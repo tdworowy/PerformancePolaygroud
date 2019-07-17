@@ -27,7 +27,12 @@ class MySimulation extends Simulation {
 			.exec( session => {
 				println( session( "RESPONSE_DATA" ).as[String] )
 				session
-			})  
+			})
+		val getApiData = exec(http("get API data")
+			.get("/data")
+			.check(status.is(session => 200))
+			)
+			
 	}
 	object PutData {
 		val getKeys = exec(http("Get Keys")
@@ -44,39 +49,63 @@ class MySimulation extends Simulation {
 				var keys = session( "KEYS" ).as[Seq[String]]
   				"/" + keys(random.nextInt(keys.length))
 			})
-		 	.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString + """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
+		 	.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString 
+			 					+ """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
 		 )  
 	}
 	
 	object PostData {
 		val postData = exec(
-			http("Post example data")
+			http("Post simple data")
 			.post("/data")
-			.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString + """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
+			.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString 
+								+ """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
 			.check(status.is(session => 200))
+		)
+		val postDataFromFile = exec(
+				feed(csv("data.csv").random)
+				.exec(http("Post data from CSV")
+				.post("/data")
+				.body(StringBody("""{ "data1":"${data1}" ,"data2":"${data2}" }""")).asJson
+				.check(status.is(session => 200))
+		))
+		val postDataFromJson = exec(
+				http("Post data from Json")
+				//.feed(jsonFile("data_json.json"))
+				.post("/data")
+				.body(RawFileBody("data_json.json"))//.asJSON
+				.check(status.is(session => 200))
 		)
 		val postBigData = exec(
-			http("Post example data")
-			.post("/data")
-			.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(3000).mkString + """", "data2": """" + random.alphanumeric.take(3000).mkString + """" }""")).asJson
-			.check(status.is(session => 200))
-			.check(bodyString.is("OK"))
-		)
-	}
+				http("Post big data")
+				.post("/data")
+				.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(3000).mkString 
+									+ """", "data2": """" + random.alphanumeric.take(3000).mkString + """" }""")).asJson
+				.check(status.is(session => 200))
+				.check(bodyString.is("OK"))
+			)
+		}
+
 	val getScenario = scenario("GetData")
-		.exec(GetData.getData)	
+		.exec(GetData.getData,GetData.getApiData)	
 	
 	val postScenario = scenario("PostData")
 		.repeat(8) {
-				exec(
-					PostData.postData)
-				.pause(1,3)
+			exec(PostData.postData)
+			.pause(1,3)
 		 }
+	val postFromFileScenario = scenario("PostDataFromFile")
+			.exec(PostData.postDataFromFile)
+			.pause(1,3)
+		 
+	val postFromJsonScenario = scenario("PostDataFromJson")
+			.exec(PostData.postDataFromJson)
+			.pause(1,3)
+		
 	val postBigDataScenario = scenario("PostBigData")
-		.repeat(8) {
-				exec(
-					PostData.postBigData)
-				.pause(1,3)
+		.repeat(3) {
+			 exec(PostData.postBigData)
+			.pause(1,3)
 		 }
 	val putScenario = scenario("PutData")
 		.exec(PutData.getKeys,
@@ -87,6 +116,8 @@ class MySimulation extends Simulation {
 		getScenario.inject(atOnceUsers(10)),
 		postScenario.inject(rampUsers(5) during (3 seconds)),
 		postBigDataScenario.inject(rampUsers(5) during (3 seconds)),
+		postFromFileScenario.inject(rampUsers(5) during (3 seconds)),
+		postFromJsonScenario.inject(rampUsers(5) during (3 seconds)),
 		putScenario.inject(rampUsers(5) during (3 seconds))			
 		)
 		.protocols(httpProtocol)
