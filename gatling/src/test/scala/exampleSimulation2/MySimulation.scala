@@ -5,8 +5,15 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
+import requests.GetDataClass
+import requests.PostDataClass
+import requests.PutDataClass
+
 class MySimulation extends Simulation {
-	var random = scala.util.Random
+	var getData = new GetDataClass().GetData
+	var postData = new PostDataClass().PostData
+	var putData = new PutDataClass().PutData
+		
 	val httpProtocol = http
 		.baseUrl("http://localhost:3000")
 		.inferHtmlResources()
@@ -15,101 +22,31 @@ class MySimulation extends Simulation {
 		.acceptLanguageHeader("pl,en-US;q=0.7,en;q=0.3")
 		.upgradeInsecureRequestsHeader("1")
 		.userAgentHeader("Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0")
-
-
-	object GetData {
-		val getData = exec(http("get data")
-			.get("/")
-			.check(status.is(session => 200))
-			.check(bodyString.transform(_.size > 2999).is(true))
-			.check(bodyString.saveAs( "RESPONSE_DATA" )) 
-			)
-			.exec( session => {
-				println( session( "RESPONSE_DATA" ).as[String] )
-				session
-			})
-		val getApiData = exec(http("get API data")
-			.get("/data")
-			.check(status.is(session => 200))
-			)
-			
-	}
-	object PutData {
-		val getKeys = exec(http("Get Keys")
-			.get("/data")
-			.check(status.is(session => 200))
-			.check(regex( "(?<=key:).*?(?=\")").findAll.saveAs( "KEYS" )) 
-			)
-			.exec( session => {
-				println( session( "KEYS" ).as[String] )
-				session
-			})
-		val putData = exec(http("Put Data")
-		 	.put(session => {
-				var keys = session( "KEYS" ).as[Seq[String]]
-  				"/" + keys(random.nextInt(keys.length))
-			})
-		 	.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString 
-			 					+ """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
-		 )  
-	}
 	
-	object PostData {
-		val postData = exec(
-			http("Post simple data")
-			.post("/data")
-			.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString 
-								+ """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
-			.check(status.is(session => 200))
-		)
-		val postDataFromFile = exec(
-				feed(csv("data.csv").random)
-				.exec(http("Post data from CSV")
-				.post("/data")
-				.body(StringBody("""{ "data1":"${data1}" ,"data2":"${data2}" }""")).asJson
-				.check(status.is(session => 200))
-		))
-		val postDataFromJson = exec(
-				http("Post data from Json")
-				//.feed(jsonFile("data_json.json"))
-				.post("/data")
-				.body(RawFileBody("data_json.json"))//.asJSON
-				.check(status.is(session => 200))
-		)
-		val postBigData = exec(
-				http("Post big data")
-				.post("/data")
-				.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(3000).mkString 
-									+ """", "data2": """" + random.alphanumeric.take(3000).mkString + """" }""")).asJson
-				.check(status.is(session => 200))
-				.check(bodyString.is("OK"))
-			)
-		}
-
 	val getScenario = scenario("GetData")
-		.exec(GetData.getData,GetData.getApiData)	
+		.exec(getData.getData,getData.getApiData)	
 	
 	val postScenario = scenario("PostData")
 		.repeat(8) {
-			exec(PostData.postData)
+			exec(postData.postData)
 			.pause(1,3)
 		 }
 	val postFromFileScenario = scenario("PostDataFromFile")
-			.exec(PostData.postDataFromFile)
+			.exec(postData.postDataFromFile)
 			.pause(1,3)
 		 
 	val postFromJsonScenario = scenario("PostDataFromJson")
-			.exec(PostData.postDataFromJson)
+			.exec(postData.postDataFromJson)
 			.pause(1,3)
 		
 	val postBigDataScenario = scenario("PostBigData")
 		.repeat(3) {
-			 exec(PostData.postBigData)
+			 exec(postData.postBigData)
 			.pause(1,3)
 		 }
 	val putScenario = scenario("PutData")
-		.exec(PutData.getKeys,
-			  PutData.putData)
+		.exec(putData.getKeys,
+			  putData.putData)
 		.pause(1,3)
 
 	setUp(
