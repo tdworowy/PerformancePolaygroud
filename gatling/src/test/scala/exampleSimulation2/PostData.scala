@@ -3,15 +3,17 @@ package requests
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
+import utils.StringUtils
 
 class PostDataClass extends Simulation {
-   var random = scala.util.Random
+   val strginUtils = new StringUtils()
+
    object PostData {
   		val postData = exec(
 			http("Post simple data")
 			.post("/data")
-			.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(20).mkString 
-								+ """", "data2": """" + random.alphanumeric.take(20).mkString + """" }""")).asJson
+			.body(StringBody( _ => """{ "data1": """" + strginUtils.generateRandomString(20) 
+								+ """", "data2": """" + strginUtils.generateRandomString(20) + """" }""")).asJson
 			.check(status.is(session => 200))
 		)
 		val postDataFromFile = exec(
@@ -23,16 +25,15 @@ class PostDataClass extends Simulation {
 		))
 		val postDataFromJson = exec(
 				http("Post data from Json")
-				//.feed(jsonFile("data_json.json"))
 				.post("/data")
-				.body(RawFileBody("data_json.json"))//.asJSON
+				.body(RawFileBody("data_json.json"))
 				.check(status.is(session => 200))
 		)
 		val postBigData = exec(
 				http("Post big data")
 				.post("/data")
-				.body(StringBody( _ => """{ "data1": """" + random.alphanumeric.take(3000).mkString 
-									+ """", "data2": """" + random.alphanumeric.take(3000).mkString + """" }""")).asJson
+				.body(StringBody( _ => """{ "data1": """" + strginUtils.generateRandomString(3000) 
+									+ """", "data2": """" + strginUtils.generateRandomString(3000) + """" }""")).asJson
 				.check(status.is(session => 200))
 				.check(bodyString.is("OK"))
 			)
