@@ -128,16 +128,28 @@ class ApiTasks3(TaskSet):
 
 
 class ApiUser1(HttpUser):
-    task_set = ApiTasks1
+    task_set = {ApiTasks1:1}
+    @task
+    def task(self):
+        pass
+
     min_wait = 2000
     max_wait = 5000
 
 class ApiUser2(HttpUser):
-    task_set = ApiTasks2
+    task_set = {ApiTasks2:1}
+    @task
+    def task(self):
+        pass
+
     min_wait = 2000
     max_wait = 5000
 
 class ApiUser3(HttpUser):
-    task_set = ApiTasks3
+    task_set = {ApiTasks3:1}
+    @task
+    def task(self):
+        pass
+
     min_wait = 2000
     max_wait = 5000
