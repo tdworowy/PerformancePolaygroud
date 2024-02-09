@@ -17,15 +17,16 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-exec": "^3.0.0",
     "jasmine": "^3.4.0",
+    "prettier": "^3.2.5",
     "uuid": "*"
   },
   "devDependencies": {
     "chai": "*",
-    "ts-node": "*",
+    "connect": "*",
     "express": "*",
     "node": "*",
     "serve-static": "*",
-    "connect": "*"
+    "ts-node": "*"
   },
   "author": "",
   "license": "ISC"
