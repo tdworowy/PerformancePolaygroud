@@ -2,7 +2,7 @@ import datetime
 import random
 import string
 import re
-from locust import HttpLocust, TaskSet, task
+from locust import HttpUser, TaskSet, task
 import csv
 import json
 from os import  path
@@ -127,17 +127,17 @@ class ApiTasks3(TaskSet):
         post_data_json(self)
 
 
-class ApiUser1(HttpLocust):
+class ApiUser1(HttpUser):
     task_set = ApiTasks1
     min_wait = 2000
     max_wait = 5000
 
-class ApiUser2(HttpLocust):
+class ApiUser2(HttpUser):
     task_set = ApiTasks2
     min_wait = 2000
     max_wait = 5000
 
-class ApiUser3(HttpLocust):
+class ApiUser3(HttpUser):
     task_set = ApiTasks3
     min_wait = 2000
     max_wait = 5000
