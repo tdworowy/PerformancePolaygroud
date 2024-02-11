@@ -12,7 +12,6 @@ def generate_report(csv_file_prefix:str) -> Figure:
 
     figure, axis = plt.subplots(nrows=len(names), ncols=2, constrained_layout=True)
 
-
     x, y = figure.get_size_inches()
     figure.set_figwidth(x * 5)
     figure.set_figheight(y * 5)
@@ -30,7 +29,6 @@ def generate_report(csv_file_prefix:str) -> Figure:
         plot1.set_title(f"{name} percentiles")
         box = plot1.get_position()
         plot1.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-
         plot1.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
         plot2 = data_failures.plot(x="Timestamp", ax=axis[i, 1])
