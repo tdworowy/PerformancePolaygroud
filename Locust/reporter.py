@@ -1,13 +1,15 @@
+import sys
+
 import mpld3
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
 
-def generate_report() -> Figure:
-    data = pd.read_csv("report.csv_stats_history.csv")
+def generate_report(csv_file_prefix:str) -> Figure:
+    data = pd.read_csv(f"{csv_file_prefix}.csv_stats_history.csv")
     data_percentile = data[["Timestamp", "Total Max Response Time", "50%","66%","75%","80%","90%","95%","98%","99%","99.9%","99.99%","100%"]]
-    data_failures = data[["Timestamp", "Total Request Count", "Total Failure Count"]]
+    data_failures = data[["Timestamp", "Total Failure Count"]]
 
     figure, axis = plt.subplots(2, 1, constrained_layout=True)
 
@@ -34,9 +36,12 @@ def generate_report() -> Figure:
 
     return figure
 
-def generate_report_interactive(fig:Figure):
-      mpld3.save_html(fig, "my_report.html")
+def generate_report_interactive(fig:Figure, file_name:str):
+      mpld3.save_html(fig, file_name)
 
 if __name__ == "__main__":
-    fig = generate_report()
-    generate_report_interactive(fig)
+    csv_prefix = sys.argv[1]
+    html_file_name = sys.argv[2]
+
+    fig = generate_report(csv_prefix)
+    generate_report_interactive(fig, html_file_name)
