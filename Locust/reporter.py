@@ -21,7 +21,7 @@ def generate_report(csv_file_prefix:str) -> Figure:
     figure.tight_layout(pad=15)
 
     for i,name in enumerate(names):
-        _data = data.loc[data['Name'] == name]
+        _data = data.loc[data["Name"] == name]
         data_percentile = _data[["Timestamp", "Total Max Response Time", "50%","66%","75%","80%","90%","95%","98%","99%","99.9%","99.99%","100%"]]
         data_failures = _data[["Timestamp", "Total Failure Count"]]
 
