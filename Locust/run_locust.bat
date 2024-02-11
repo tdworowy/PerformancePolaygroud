@@ -1,1 +1,0 @@
-locust -f locust_example.py --host=http://localhost:3000 --loglevel=DEBUG
