@@ -1,19 +1,24 @@
-#!/bin/sh
+#!/bin/bash
 # add [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile' to .zshrc
 pip3 install -r requirements.txt
 
-fun_locust(){
-locust -f locust_example3.py  --headless --users $1 --spawn-rate 0.5 -t $2 -H http://192.168.50.241:8080 --csv-full-history --csv report_$1_$2.csv && python reporter.py report_$1_$2 report_$1_$2.html
+run_locust(){
+locust -f locust_example3.py  --headless --users $1 --spawn-rate 0.5 -t $2 -H http://192.168.50.241:8080 --csv-full-history --csv report_$1_$2.csv
 }
 
-users1=50
-time1="1m"
-fun_locust $users1 $time1
+generate_report() {
+  python reporter.py report_$1_$2 report_$1_$2.html
+}
 
-users2=100
-time2="5m"
-fun_locust $users2 $time2
+users=(5 50 300)
+durations=("30s" "1m" "5m")
 
-users3=500
-time3="3m"
-fun_locust $users3 $time3
+for i in {0..2}
+do
+  run_locust ${users[$i]} ${durations[$i]}
+done
+
+for i in {0..2}
+do
+  generate_report ${users[$i]} ${durations[$i]}
+done
