@@ -1,5 +1,6 @@
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 use rand::{distributions::Alphanumeric, Rng};
+use std::{thread, time, usize};
 
 #[get("/randStr")]
 async fn random_string() -> impl Responder {
@@ -13,9 +14,16 @@ async fn random_string() -> impl Responder {
     HttpResponse::Ok().body(rand_str)
 }
 
+#[get("/slow")]
+async fn slow() -> impl Responder {
+    let rand_sleep_time: u64 = rand::thread_rng().gen_range(300..2000);
+    thread::sleep(time::Duration::from_millis(rand_sleep_time));
+    HttpResponse::Ok()
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(random_string))
+    HttpServer::new(|| App::new().service(random_string).service(slow))
         .bind(("0.0.0.0", 8080))?
         .run()
         .await

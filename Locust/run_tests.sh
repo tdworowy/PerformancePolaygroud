@@ -15,5 +15,5 @@ time2="5m"
 fun_locust $users2 $time2
 
 users3=500
-time3="10m"
+time3="3m"
 fun_locust $users3 $time3
