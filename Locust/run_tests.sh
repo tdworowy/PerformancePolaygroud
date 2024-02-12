@@ -15,8 +15,7 @@ durations=("30s" "1m" "5m")
 
 for i in {0..2}
 do
-  run_locust ${users[$i]} ${durations[$i]}
-  sleep 10
+  run_locust ${users[$i]} ${durations[$i]} && sleep 10
 done
 
 for i in {0..2}
