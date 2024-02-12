@@ -1,4 +1,4 @@
-use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use rand::{distributions::Alphanumeric, Rng};
 use serde::{Deserialize, Serialize};
 use std::{thread, time, usize};
@@ -17,7 +17,7 @@ async fn random_string() -> impl Responder {
 
 #[get("/slow")]
 async fn slow() -> impl Responder {
-    let ranpd_sleep_time: u64 = rand::thread_rng().gen_range(300..2000);
+    let rand_sleep_time: u64 = rand::thread_rng().gen_range(300..2000);
     thread::sleep(time::Duration::from_millis(rand_sleep_time));
     HttpResponse::Ok()
 }
