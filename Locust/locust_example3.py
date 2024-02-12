@@ -11,7 +11,8 @@ class ApiUser1(HttpUser):
     @task(2)
     def post_data(self):
         data_to_post = {"field1":"Test123", "field2":"Test456"}
-        response = self.client.post("/postData",  json=data_to_post)
+        headers = {'Content-Type': 'application/json'}
+        response = self.client.post("/postData",  json=data_to_post,  headers=headers)
 
         assert response.json() == data_to_post
 
