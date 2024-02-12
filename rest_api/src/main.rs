@@ -1,5 +1,6 @@
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
 use rand::{distributions::Alphanumeric, Rng};
+use serde::{Deserialize, Serialize};
 use std::{thread, time, usize};
 
 #[get("/randStr")]
@@ -16,15 +17,33 @@ async fn random_string() -> impl Responder {
 
 #[get("/slow")]
 async fn slow() -> impl Responder {
-    let rand_sleep_time: u64 = rand::thread_rng().gen_range(300..2000);
+    let ranpd_sleep_time: u64 = rand::thread_rng().gen_range(300..2000);
     thread::sleep(time::Duration::from_millis(rand_sleep_time));
     HttpResponse::Ok()
 }
 
+#[derive(Serialize, Deserialize)]
+struct Data {
+    field1: String,
+    field2: String,
+}
+
+#[post("/postData")]
+async fn post_data(data: web::Json<Data>) -> impl Responder {
+    let _data = data.into_inner();
+
+    HttpResponse::Ok().json(_data)
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(random_string).service(slow))
-        .bind(("0.0.0.0", 8080))?
-        .run()
-        .await
+    HttpServer::new(|| {
+        App::new()
+            .service(random_string)
+            .service(slow)
+            .service(post_data)
+    })
+    .bind(("0.0.0.0", 8080))?
+    .run()
+    .await
 }
