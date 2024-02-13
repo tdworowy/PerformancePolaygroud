@@ -32,7 +32,7 @@ struct Data {
 #[post("/postData")]
 async fn post_data(data: web::Json<Data>) -> impl Responder {
     let _data = data.into_inner();
-    let mut client = Client::connect("host=localhost usver=test", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost user=test", NoTls).unwrap();
     let row = client.query_opt(
         "select field1, field2 from test_table where field1 = $1 and field2 = $2",
         &[&_data.field1, &_data.field2],

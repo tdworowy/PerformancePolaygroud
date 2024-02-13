@@ -1,14 +1,12 @@
 locust -f locust_example.py --host=http://localhost:3000 --loglevel=DEBUG
 
-
 locust -f locust_example3.py  --headless --users 10 --spawn-rate 1 -t 20s -H http://192.168.50.241:8080 --html report.html  --csv-full-history --csv report.csv
-
 
 locust -f locust_example3.py  --headless --users 100 --spawn-rate 1 -t 5m -H http://192.168.50.241:8080 --csv-full-history --csv report.csv
 locust -f locust_example3.py  --headless --users 500 --spawn-rate 0.5 -t 5m -H http://192.168.50.241:8080 --csv-full-history --csv report.csv
 
+curl -d '{"field1":"test", "field2":"test2"}' -H "content-type: application/json" -X POST 192.168.50.241:8080/postData
 
 TODO
-- reporter plot_distribution fix
 - docker distribuited locust
 - rust rest api - read and update database
