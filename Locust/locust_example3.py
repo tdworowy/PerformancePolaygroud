@@ -1,4 +1,9 @@
+from random import randrange
+
 from locust import HttpUser,task
+
+from utils import random_string
+
 
 class ApiUser1(HttpUser):
     min_wait = 100
@@ -10,8 +15,10 @@ class ApiUser1(HttpUser):
 
     @task(2)
     def post_data(self):
-        data_to_post = {"field1":"Test123", "field2":"Test456"}
+        data_to_post = {"field1":random_string(randrange(100)),
+                        "field2":random_string(randrange(100))}
         headers = {'Content-Type': 'application/json'}
+
         response = self.client.post("/postData",  json=data_to_post,  headers=headers)
 
         assert response.json() == data_to_post

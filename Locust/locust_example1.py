@@ -1,18 +1,12 @@
 import datetime
 import random
-import string
 import re
 from locust import HttpUser, TaskSet, task
 import csv
 import json
 from os import  path
 
-def random_string(length: int) -> str:
-    """
-    :param length: length of new random string.
-    :return: random string.
-    """
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+from utils import random_string
 
 
 def get_service(self: TaskSet):

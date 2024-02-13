@@ -6,3 +6,8 @@ locust -f locust_example3.py  --headless --users 10 --spawn-rate 1 -t 20s -H htt
 
 locust -f locust_example3.py  --headless --users 100 --spawn-rate 1 -t 5m -H http://192.168.50.241:8080 --csv-full-history --csv report.csv
 locust -f locust_example3.py  --headless --users 500 --spawn-rate 0.5 -t 5m -H http://192.168.50.241:8080 --csv-full-history --csv report.csv
+
+
+TODO
+- docker distribuited locust
+- rust rest api - read and update database
