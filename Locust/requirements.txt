@@ -3,3 +3,5 @@ pandas
 Pyarrow
 matplotlib
 mpld3
+scipy
+numpy

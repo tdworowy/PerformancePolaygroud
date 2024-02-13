@@ -9,5 +9,6 @@ locust -f locust_example3.py  --headless --users 500 --spawn-rate 0.5 -t 5m -H h
 
 
 TODO
+- reporter plot_distribution fix
 - docker distribuited locust
 - rust rest api - read and update database
