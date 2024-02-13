@@ -1,0 +1,8 @@
+sudo systemctl start postgresql.service
+sudo -i -u postgres
+
+createdb test
+createuser --interactive // add test
+
+\l <- show databases
+\c test <- connect to database
