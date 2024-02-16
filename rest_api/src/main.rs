@@ -2,6 +2,7 @@ use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use rand::{distributions::Alphanumeric, Rng};
 use serde::{Deserialize, Serialize};
 use std::{thread, time, usize};
+use tokio_postgres::{Error, NoTls};
 
 //TODO use tokio_postgress
 #[get("/randStr")]
@@ -32,23 +33,28 @@ struct Data {
 #[post("/postData")]
 async fn post_data(data: web::Json<Data>) -> impl Responder {
     let _data = data.into_inner();
-    // let mut client = Client::connect("host=localhost user=test", NoTls).unwrap();
-    //  let row = client.query_opt(
-    //     "select field1, field2 from test_table where field1 = $1 and field2 = $2",
-    //     &[&_data.field1, &_data.field2],
-    //  );
-
-    //match row {
-    //    Ok(Some(_)) => {}
-    //   Ok(None) => {
-    //    let _ = client.execute(
-    //         "insert into test_table (field1, field2) values ($1, $2)",
-    //           &[&_data.field1, &_data.field2],
-    //    );
-    //  }
-    //  Err(error) => println!("Error {:?}", error),
-    // };
-
+    match tokio_postgres::connect("host=localhost user=test", NoTls).await {
+        Ok(client_connection) => {
+            let (client, connection) = client_connection;
+            let row = client
+                .query_opt(
+                    "select field1, field2 from test_table where field1 = $1 and field2 = $2",
+                    &[&_data.field1, &_data.field2],
+                )
+                .await;
+            match row {
+                Ok(Some(_)) => {}
+                Ok(None) => {
+                    let _ = client.execute(
+                        "insert into test_table (field1, field2) values ($1, $2)",
+                        &[&_data.field1, &_data.field2],
+                    );
+                }
+                Err(error) => println!("Error {:?}", error),
+            }
+        }
+        Err(error) => println!("Error {:?}", error),
+    }
     HttpResponse::Ok().json(_data)
 }
 

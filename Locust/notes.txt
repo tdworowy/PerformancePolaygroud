@@ -10,3 +10,4 @@ curl -d '{"field1":"test", "field2":"test2"}' -H "content-type: application/json
 TODO
 - docker distribuited locust
 - rust rest api - read and update database
+- make reporter a standalone tool
