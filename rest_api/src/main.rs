@@ -5,7 +5,6 @@ use std::{thread, time, usize};
 use tokio;
 use tokio_postgres::NoTls;
 
-//TODO use tokio_postgress
 #[get("/randStr")]
 async fn random_string() -> impl Responder {
     let str_size: usize = rand::thread_rng().gen_range(100..5000);
