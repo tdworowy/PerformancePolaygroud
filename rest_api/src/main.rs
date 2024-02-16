@@ -33,6 +33,7 @@ struct Data {
 #[post("/postData")]
 async fn post_data(data: web::Json<Data>) -> impl Responder {
     let _data = data.into_inner();
+    println!("Post data end point start");
     match tokio_postgres::connect(
         "host=localhost user=test password=test dbname=test connect_timeout=60",
         NoTls,
@@ -48,7 +49,12 @@ async fn post_data(data: web::Json<Data>) -> impl Responder {
                 )
                 .await;
             match row {
-                Ok(Some(_)) => {}
+                Ok(Some(_)) => {
+                    println!(
+                        "Data field1: {:?} field2:{:?} found",
+                        &_data.field1, &_data.field2
+                    );
+                }
                 Ok(None) => {
                     let _ = client.execute(
                         "insert into test_table (field1, field2) values ($1, $2)",
