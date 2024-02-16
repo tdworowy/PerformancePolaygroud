@@ -2,7 +2,8 @@ use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use rand::{distributions::Alphanumeric, Rng};
 use serde::{Deserialize, Serialize};
 use std::{thread, time, usize};
-use tokio_postgres::{Error, NoTls};
+use tokio;
+use tokio_postgres::NoTls;
 
 //TODO use tokio_postgress
 #[get("/randStr")]
@@ -42,6 +43,12 @@ async fn post_data(data: web::Json<Data>) -> impl Responder {
     {
         Ok(client_connection) => {
             let (client, connection) = client_connection;
+
+            tokio::spawn(async move {
+                if let Err(e) = connection.await {
+                    eprint!("Connection error: {}", e);
+                }
+            });
             let row = client
                 .query_opt(
                     "select field1, field2 from test_table where field1 = $1 and field2 = $2",
