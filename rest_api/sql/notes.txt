@@ -5,7 +5,7 @@ sudo -i -u postgres
 createdb test
 createuser --interactive // add test
 
-CREATE USER [name] WITH PASSWORD '[password]';
+CREATE USER [name] WITH PASSWORD '[password]'; // user added test test
 
 \l <- show databases
 \c test <- connect to database

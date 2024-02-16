@@ -33,7 +33,12 @@ struct Data {
 #[post("/postData")]
 async fn post_data(data: web::Json<Data>) -> impl Responder {
     let _data = data.into_inner();
-    match tokio_postgres::connect("host=localhost user=test password=test", NoTls).await {
+    match tokio_postgres::connect(
+        "host=localhost user=test password=test dbname=test connect_timeout=60",
+        NoTls,
+    )
+    .await
+    {
         Ok(client_connection) => {
             let (client, connection) = client_connection;
             let row = client
