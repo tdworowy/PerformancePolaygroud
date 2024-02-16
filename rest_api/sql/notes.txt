@@ -1,8 +1,11 @@
 sudo systemctl start postgresql.service
 sudo -i -u postgres
+ sudo -u postgres psql
 
 createdb test
 createuser --interactive // add test
+
+CREATE USER [name] WITH PASSWORD '[password]';
 
 \l <- show databases
 \c test <- connect to database
