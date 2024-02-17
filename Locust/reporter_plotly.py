@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import  Axes
 
-
+# TODO use plotly instead matplotlib
 
 def plot_percentile(i:int, name:str,data_percentile:pd.DataFrame,axis:Axes):
     plot = data_percentile.plot(x="Timestamp", ax=axis[i, 0])

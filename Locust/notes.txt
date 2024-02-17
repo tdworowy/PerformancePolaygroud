@@ -9,6 +9,8 @@ curl -d '{"field1":"test", "field2":"test2"}' -H "content-type: application/json
 
 docker-compose up --scale worker=4
 
+jupyter lab
+
 TODO
 - docker distribuited locust
 - rust rest api - read and update database

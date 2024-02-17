@@ -5,3 +5,4 @@ matplotlib
 mpld3
 scipy
 numpy
+Plotly
