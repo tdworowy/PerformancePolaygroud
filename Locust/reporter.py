@@ -38,8 +38,8 @@ def plot_distribution(i:int, name:str,data_dist:pd.DataFrame,axis:Axes):
     plot.set_position([box.x0, box.y0, box.width * 0.8, box.height])
     plot.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-def generate_report(csv_file_prefix:str) -> Figure:
-    data = pd.read_csv(f"{csv_file_prefix}.csv_stats_history.csv")
+def generate_report(csv_file:str) -> Figure:
+    data = pd.read_csv(f"{csv_file}")
     names = data["Name"].unique()
 
     figure, axis = plt.subplots(nrows=len(names), ncols=3, constrained_layout=True)
@@ -67,8 +67,8 @@ def generate_report_interactive(fig:Figure, file_name:str):
       mpld3.save_html(fig, file_name)
 
 if __name__ == "__main__":
-    csv_prefix = sys.argv[1]
+    csv_file = sys.argv[1]
     html_file_name = sys.argv[2]
 
-    fig = generate_report(csv_prefix)
+    fig = generate_report(csv_file)
     generate_report_interactive(fig, html_file_name)

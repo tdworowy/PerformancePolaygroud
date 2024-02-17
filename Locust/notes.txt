@@ -7,7 +7,11 @@ locust -f locust_example3.py  --headless --users 500 --spawn-rate 0.5 -t 5m -H h
 
 curl -d '{"field1":"test", "field2":"test2"}' -H "content-type: application/json" -X POST 192.168.50.241:8080/postData
 
+docker-compose up --scale worker=4
+
 TODO
 - docker distribuited locust
 - rust rest api - read and update database
 - make reporter a standalone tool
+
+

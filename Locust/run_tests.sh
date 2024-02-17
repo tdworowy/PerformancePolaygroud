@@ -7,7 +7,7 @@ locust -f locust_example3.py --headless --only-summary --users "$1" --spawn-rate
 }
 
 generate_report() {
-  python reporter.py report_"$1"_"$2" report_"$1"_"$2".html
+  python reporter.py report_"$1"_"$2".csv_stats_history.csv report_"$1"_"$2".html
 }
 
 users=(5 50 300)
