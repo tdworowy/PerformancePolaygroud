@@ -56,7 +56,6 @@ async fn post_data(data: web::Json<Data>) -> impl Responder {
             match row {
                 Ok(row) => {
                     if row.len() == 0 {
-                        println!("Inserting data");
                         match client
                             .execute(
                                 "insert into test_table (field1, field2) values ($1, $2)",
@@ -64,7 +63,7 @@ async fn post_data(data: web::Json<Data>) -> impl Responder {
                             )
                             .await
                         {
-                            Ok(number) => println!("Rows affected {:?}", number),
+                            Ok(number) => { }//println!("Rows affected {:?}", number) ,
                             Err(error) => eprint!("Error: {:?}", error),
                         }
                     } else {
