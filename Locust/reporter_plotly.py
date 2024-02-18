@@ -1,73 +1,72 @@
 import sys
+from datetime import datetime
 
-import mpld3
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-from matplotlib.axes import  Axes
+import plotly.graph_objects as go
+import plotly.express as px
 
-# TODO use plotly instead matplotlib
 
-def plot_percentile(i:int, name:str,data_percentile:pd.DataFrame,axis:Axes):
-    plot = data_percentile.plot(x="Timestamp", ax=axis[i, 0])
 
-    plot.set_facecolor('#B0C4DE')
-    plot.set_title(f"{name} percentiles")
 
-    box = plot.get_position()
-    plot.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-    plot.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-def plot_failures(i:int, name:str,data_failures:pd.DataFrame,axis:Axes):
-    plot = data_failures.plot(x="Timestamp", ax=axis[i, 1])
+def plot_percentile( name:str,data_percentile:pd.DataFrame):
+    fig = go.Figure()
+    timestamps = list(map(lambda timestamp: datetime.fromtimestamp(timestamp).strftime("%H:%M:%S"), data_percentile["Timestamp"]))
 
-    plot.set_facecolor('#B0C4DE')
-    plot.set_title(f"{name} failures")
+    for percentile in filter(lambda  c: c != "Timestamp",data_percentile.columns):
+        fig.add_trace(go.Scatter(x=timestamps, y=data_percentile[percentile], mode='lines', name=percentile))
 
-    box = plot.get_position()
-    plot.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-    plot.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    fig.update_layout(title=f"{name} percentiles",
+                      xaxis_title='Timestamp',
+                      yaxis_title='Response Time',
+                      xaxis=dict(
+                          tickmode='linear',
+                          tick0=1,
+                          dtick=15
+                      )
+                      )
+    fig.show()
 
-def plot_distribution(i:int, name:str,data_dist:pd.DataFrame,axis:Axes):
-    plot = data_dist.plot.hist(ax=axis[i, 2], density=True,)
+def plot_failures(name:str,data_failures:pd.DataFrame):
+    fig = go.Figure()
+    timestamps = list(
+        map(lambda timestamp: datetime.fromtimestamp(timestamp).strftime("%H:%M:%S"), data_failures["Timestamp"]))
 
-    plot.set_facecolor('#B0C4DE')
-    plot.set_title(f"{name} Total Max Response Time")
+    fig.add_trace(go.Scatter(x=timestamps, y=data_failures["Total Failure Count"], mode='lines'))
 
-    box = plot.get_position()
-    plot.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-    plot.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    fig.update_layout(title=f"{name} Failures",
+                      xaxis_title='Timestamp',
+                      yaxis_title='Failures',
+                      xaxis=dict(
+                          tickmode='linear',
+                          tick0=1,
+                          dtick=15
+                      )
+                      )
+    fig.show()
 
-def generate_report(csv_file:str) -> Figure:
+def plot_distribution(name:str,data_dist:pd.DataFrame):
+    fig = px.histogram(data_dist, x="Total Max Response Time")
+    fig.update_layout(title=f"{name} Response time distribution")
+    fig.show()
+
+def generate_report(csv_file:str) :
     data = pd.read_csv(f"{csv_file}")
     names = data["Name"].unique()
-
-    figure, axis = plt.subplots(nrows=len(names), ncols=3, constrained_layout=True)
-
-    x, y = figure.get_size_inches()
-    figure.set_figwidth(x * 5)
-    figure.set_figheight(y * 5)
-
-    figure.set_facecolor('#6A5ACD')
-
-    for i,name in enumerate(names):
+    for name in names:
         _data = data.loc[data["Name"] == name]
         data_percentile = _data[["Timestamp", "Total Max Response Time", "50%","66%","75%","80%","90%","95%","98%","99%","99.9%","99.99%","100%"]]
         data_failures = _data[["Timestamp", "Total Failure Count"]]
         data_dist = _data[["Total Max Response Time"]]
 
-        plot_percentile(i,name, data_percentile,axis)
-        plot_failures(i,name, data_failures,axis)
-        plot_distribution(i,name, data_dist,axis)
+        plot_percentile(name, data_percentile)
+        plot_failures(name, data_failures)
+        plot_distribution(name, data_dist)
 
-    return figure
 
-def generate_report_interactive(fig:Figure, file_name:str):
-      mpld3.save_html(fig, file_name)
 
 if __name__ == "__main__":
     csv_file = sys.argv[1]
     html_file_name = sys.argv[2]
 
-    fig = generate_report(csv_file)
-    generate_report_interactive(fig, html_file_name)
+    generate_report(csv_file)
