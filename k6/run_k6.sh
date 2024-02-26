@@ -1,1 +1,1 @@
-k6 run --vus 10 --duration 30s script.js
+k6 --out csv=test_results.csv  run script.js
