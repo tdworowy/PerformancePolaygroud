@@ -4,7 +4,7 @@ import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporte
 import { sleep } from "k6";
 
 export const options = {
-   vus: 5,
+  vus: 5,
   duration: "30s",
 
   summaryTrendStats: ["med", "p(99)", "p(99.9)", "p(99.99)"],
@@ -19,7 +19,7 @@ function generateRandomString(length) {
   for (let i = 0; i <= length; i++) {
     result.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
   }
-  return result
+  return result;
 }
 
 export default function () {
