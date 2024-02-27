@@ -1,0 +1,1 @@
+jmeter.bat -n -t jmeter_jmx/TestPlan.jmx -l testresults.jtl -e -o results
