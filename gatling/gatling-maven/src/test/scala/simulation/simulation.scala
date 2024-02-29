@@ -21,7 +21,7 @@ class Example1 extends Simulation {
     .exec(http("Post Random String")
       .post("/postData")
       .header("content-type", "application/json")
-      .body(StringBody(s"""{"field1": ${random.alphanumeric.take(20).mkString},"field2": ${random.alphanumeric.take(20).mkString}}"""")).asJson
+      .body(StringBody(s"""{"field1": "${random.alphanumeric.take(20).mkString}","field2": "${random.alphanumeric.take(20).mkString}"}""")).asJson
       .check(status.is(200)))
     .pause(2)  
     
@@ -30,3 +30,6 @@ class Example1 extends Simulation {
     scn1.inject(constantConcurrentUsers(10) during(30 seconds))
   ).protocols(httpProtocol)
 }
+
+// TODO random.alphanumeric.take(20).mkString runs only once
+// TODO not found errros in vscodium
