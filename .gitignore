@@ -10,3 +10,4 @@ target
 .vscode
 .ipynb_checkpoints
 .jtl
+.metals
