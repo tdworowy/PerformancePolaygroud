@@ -6,7 +6,7 @@ import csv
 import json
 from os import  path
 
-from utils import random_string
+from Locust.utils import random_string
 
 
 def get_service(self: TaskSet):
@@ -37,7 +37,7 @@ def post_data_csv(self: TaskSet):
     """
     :param self: TaskSet object.
     """
-    with open(path.join("data","data.csv")) as csv_file:
+    with open(path.join("data", "data.csv")) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         rows = [row for row in csv_reader]
         random_row_number = random.randrange(1, len(rows)-1)
@@ -71,7 +71,7 @@ def post_data_json(self: TaskSet):
     """
     :param self: TaskSet object.
     """
-    with open(path.join("data","data_json.json")) as json_file:
+    with open(path.join("data", "data_json.json")) as json_file:
         data = json.load(json_file)
     headers = {'Content-Type': 'application/json'}
     response = self.client.post("/data",  json=data, headers=headers)
