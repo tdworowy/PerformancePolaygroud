@@ -24,7 +24,7 @@ async fn slow() -> impl Responder {
     HttpResponse::Ok()
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Data {
     field1: String,
     field2: String,
@@ -32,6 +32,7 @@ struct Data {
 
 #[post("/postData")]
 async fn post_data(data: web::Json<Data>) -> impl Responder {
+    println!("Error {:?}", data);
     let _data = data.into_inner();
     match tokio_postgres::connect(
         "host=localhost user=test password=test dbname=test connect_timeout=60",

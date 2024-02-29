@@ -1,1 +1,1 @@
-mvn gatling:test -Dgatling.simulationClass=MySimulation
+mvn gatling:test
