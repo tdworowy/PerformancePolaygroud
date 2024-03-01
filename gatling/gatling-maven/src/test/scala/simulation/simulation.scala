@@ -7,8 +7,8 @@ import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.protocol.HttpProtocolBuilder
 
 class Example1 extends Simulation {
- var random = scala.util.Random
-  
+ val generateRandomStr = (range:Int) => scala.util.Random.alphanumeric.take(range).mkString
+   
  val httpProtocol = http
     .baseUrl("http://192.168.50.241:8080") 
  val scn = scenario("GetSimulation")
@@ -18,10 +18,16 @@ class Example1 extends Simulation {
     .pause(2)
   
  val scn1 = scenario("PostSimulation")
-    .exec(http("Post Random String")
+  .exec(session => {
+    val field1 = generateRandomStr(20)
+    val field2 = generateRandomStr(20)
+    session.set("field1", field1).set("field2", field2)
+  })
+    .exec(
+      http("Post Random String")
       .post("/postData")
       .header("content-type", "application/json")
-      .body(StringBody(s"""{"field1": "${random.alphanumeric.take(20).mkString}","field2": "${random.alphanumeric.take(20).mkString}"}""")).asJson
+      .body(StringBody(session => s"""{"field1": "${session("field1").as[String]}","field2": "${session("field2").as[String]}"}""")).asJson
       .check(status.is(200)))
     .pause(2)  
     
@@ -30,6 +36,4 @@ class Example1 extends Simulation {
     scn1.inject(constantConcurrentUsers(10) during(30 seconds))
   ).protocols(httpProtocol)
 }
-
-// TODO random.alphanumeric.take(20).mkString runs only once
-// TODO not found errros in vscodium
+// TODO 'not found' errros in vscodium, metals seems to don't work correctly with gatling 
