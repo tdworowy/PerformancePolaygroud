@@ -1,6 +1,5 @@
 package com.example;
 
-import jodd.net.URLDecoder;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.control.gui.TestPlanGui;
 import org.apache.jmeter.engine.JMeterEngineException;
@@ -15,13 +14,9 @@ import org.apache.jorphan.collections.HashTree;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
-
-
 public class AppTest {
 
     @Test
@@ -81,8 +76,7 @@ public class AppTest {
         jm.configure(hashTree);
 
         try {
-            SaveService.saveTree(hashTree, new FileOutputStream(
-                    "test.jmx"));
+            SaveService.saveTree(hashTree, Files.newOutputStream(Paths.get("test.jmx")));
         } catch (IOException e) {
             e.printStackTrace();
         }
