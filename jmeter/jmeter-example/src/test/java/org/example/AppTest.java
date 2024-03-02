@@ -4,10 +4,12 @@ import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.control.gui.TestPlanGui;
 import org.apache.jmeter.engine.JMeterEngineException;
 import org.apache.jmeter.engine.StandardJMeterEngine;
+import org.apache.jmeter.reporters.ResultCollector;
 import org.apache.jmeter.reporters.Summariser;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.TestPlan;
 import org.apache.jmeter.threads.SetupThreadGroup;
+import org.apache.jmeter.timers.UniformRandomTimer;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
 import org.apache.jmeter.protocol.http.sampler.HTTPSampler;
@@ -19,10 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 
 public class AppTest {
@@ -70,19 +69,29 @@ public class AppTest {
                 .toString();
     }
 
-    private HTTPSampler getHttpsSampler(Method method) {
+    private HTTPSampler getHttpsSampler(Method method, List<TestElement> elements ) {
         HTTPSampler sampler = new HTTPSampler();
         sampler.setDomain(host);
         sampler.setPort(port);
         sampler.setMethod(method.label);
-
+        for(TestElement element : elements) {
+            sampler.addTestElement(element);
+        }
         return sampler;
+    }
+
+    private UniformRandomTimer getuniformRandomTimer(String delay, Integer range) {
+        UniformRandomTimer uniformRandomTimer = new UniformRandomTimer();
+        uniformRandomTimer.setDelay(delay);
+        uniformRandomTimer.setRange(range);
+        return  uniformRandomTimer;
     }
 
     private LoopController getLoopController(List<HTTPSampler> samplers) {
         LoopController loopCtrl = new LoopController();
-        loopCtrl.setLoops(1);
-        loopCtrl.setFirst(true);
+        loopCtrl.setLoops(-1);
+        loopCtrl.setContinueForever(true);
+       // loopCtrl.setFirst(true);
 
         for (HTTPSampler sampler : samplers) {
             loopCtrl.addTestElement(sampler);
@@ -92,10 +101,12 @@ public class AppTest {
 
     }
 
-    private SetupThreadGroup getThreadGroup(LoopController loopCtrl, Integer threadsCount, Integer rampUp) {
+    private SetupThreadGroup getThreadGroup(LoopController loopCtrl, Integer threadsCount, Integer rampUp, Integer duration) {
         SetupThreadGroup threadGroup = new SetupThreadGroup();
         threadGroup.setNumThreads(threadsCount);
         threadGroup.setRampUp(rampUp);
+        threadGroup.setScheduler(true);
+        threadGroup.setDuration(duration);
         threadGroup.setSamplerController(loopCtrl);
 
         return threadGroup;
@@ -114,16 +125,19 @@ public class AppTest {
 
         TestPlan testPlan = getTestPlan("Example1");
 
-        HTTPSampler randStringSampler = getHttpsSampler(Method.GET);
+
+        UniformRandomTimer uniformRandomTimer = getuniformRandomTimer("2000", 5000);
+
+        HTTPSampler randStringSampler = getHttpsSampler(Method.GET, Collections.singletonList(uniformRandomTimer));
         randStringSampler.setPath("/randStr");
 
-        HTTPSampler postDataSampler = getHttpsSampler(Method.POST);
+        HTTPSampler postDataSampler = getHttpsSampler(Method.POST, Collections.singletonList(uniformRandomTimer));
         postDataSampler.setPath("/postData");
         postDataSampler.addArgument("Content-Type", "application/json");
         postDataSampler.setPostBodyRaw(true);
 
-        String jsonBody = String.format("{\"filed1\": \"%s\", \"filed2\": \"%s\"}", generateRandomString(20), generateRandomString(20));
-        postDataSampler.addNonEncodedArgument("", jsonBody, "");
+        String jsonBody = String.format("{\"field1\": \"%s\", \"field2\": \"%s\"}", generateRandomString(20), generateRandomString(20));
+        postDataSampler.addNonEncodedArgument("body", jsonBody, "");
 
 
         ArrayList<HTTPSampler> samplers = new ArrayList<>();
@@ -132,6 +146,7 @@ public class AppTest {
 
 
         LoopController loopCtrl = getLoopController(samplers);
+
 
 //        String summariserName = JMeterUtils.getPropDefault("summariser.name", "summary");
 //        if (!summariserName.isEmpty()) {
@@ -145,7 +160,8 @@ public class AppTest {
 
         hashTree.add(testPlan);
         hashTree.add(testPlan, loopCtrl);
-        hashTree.add(testPlan, getThreadGroup(loopCtrl, 5, 1));
+        hashTree.add(testPlan, getThreadGroup(loopCtrl, 5, 1, 120));
+
         hashTree.add(testPlan, randStringSampler);
         hashTree.add(testPlan, postDataSampler);
 
@@ -154,16 +170,16 @@ public class AppTest {
 
         jmeter.configure(hashTree);
 
-        try {
-            SaveService.saveTree(hashTree, new FileOutputStream("test.jmx"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            SaveService.saveTree(hashTree, new FileOutputStream("test.jmx"));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
         try {
             jmeter.runTest();
             while (jmeter.isActive()) {
-                Thread.sleep(5000);
+                 Thread.sleep(5000);
             }
         } catch (JMeterEngineException | InterruptedException e) {
             e.printStackTrace();
@@ -171,4 +187,6 @@ public class AppTest {
     }
 }
 
-// TODO nothing works, java is crap
+// TODO how to get any results
+// TODO how to save to jmx
+// TODO error 400 for POST
