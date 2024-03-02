@@ -17,10 +17,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 public class AppTest {
 
     @Test
-    public void exampleTest(){
+    public void exampleTest() {
         File properties = new File(
                 getClass().getClassLoader().getResource("jmeter.properties").getFile()
         );
@@ -32,7 +33,7 @@ public class AppTest {
         JMeterUtils.setJMeterHome("D:\\jmeter\\apache-jmeter-5.1.1\\"); //Path to jmeter
         JMeterUtils.initLocale();
 
-        HashTree hashTree = new HashTree();     
+        HashTree hashTree = new HashTree();
 
         // HTTP Sampler
         HTTPSampler getData = new HTTPSampler();
@@ -47,7 +48,7 @@ public class AppTest {
         postData.setPath("/data");
         postData.setMethod("POST");
         postData.setPostBodyRaw(true);
-        postData.addNonEncodedArgument("body", "data1:Test1,data2:Test2" , null); // Not exactly as it should be
+        postData.addNonEncodedArgument("body", "data1:Test1,data2:Test2", null); // Not exactly as it should be
 
         // Loop Controller
         LoopController loopCtrl = new LoopController();
