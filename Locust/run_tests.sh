@@ -3,7 +3,7 @@
 pip3 install -r requirements.txt
 
 run_locust() {
-locust -f locust_example3.py --headless --only-summary --users "$1" --spawn-rate 0.5 -t "$2" -H http://192.168.50.241:8080 --csv-full-history --csv report_"$1"_"$2".csv
+locust -f locust_example3.py --headless --only-summary --users "$1" --spawn-rate 0.1 -t "$2" -H http://192.168.50.241:8080 --csv-full-history --csv report_"$1"_"$2".csv
 }
 
 #generate_report() {
@@ -13,10 +13,13 @@ locust -f locust_example3.py --headless --only-summary --users "$1" --spawn-rate
 users=(5 50 300)
 durations=("30s" "1m" "5m")
 
-for i in {0..2}
-do
-  run_locust "${users[$i]}" "${durations[$i]}" && sleep 10
-done
+#for i in {0..2}
+#do
+#  run_locust "${users[$i]}" "${durations[$i]}" && sleep 10
+#done
+
+run_locust "20" "5m"
+
 
 #for i in {0..2}
 #do

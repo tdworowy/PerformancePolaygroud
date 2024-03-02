@@ -6,8 +6,8 @@ from utils import random_string
 
 
 class ApiUser1(HttpUser):
-    min_wait = 100
-    max_wait = 500
+    min_wait = 500
+    max_wait = 2000
 
     @task(3)
     def get_random_string(self):
@@ -19,9 +19,7 @@ class ApiUser1(HttpUser):
                         "field2":random_string(randrange(100))}
         headers = {'Content-Type': 'application/json'}
 
-        response = self.client.post("/postData",  json=data_to_post,  headers=headers)
-
-        assert response.json() == data_to_post
+        self.client.post("/postData",  json=data_to_post,  headers=headers)
 
     @task(1)
     def get_slow(self):

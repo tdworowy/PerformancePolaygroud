@@ -81,7 +81,7 @@ def generate_report(csv_file:str) :
         data_dist = _data[["Total Max Response Time"]]
 
         plot_percentile_timestamps(name, data_percentile_timestamp)
-        plot_percentile_other(name, data_percentile_user_count, "User Count") # TODO it looks wierd
+        plot_percentile_other(name, data_percentile_user_count, "User Count")
         plot_failures(name, data_failures)
         plot_distribution(name, data_dist)
 
