@@ -12,8 +12,6 @@ docker-compose up --scale worker=4
 jupyter lab
 
 TODO
-- docker distribuited locust
-- rust rest api - read and update database
 - make reporter a standalone tool
 
 
