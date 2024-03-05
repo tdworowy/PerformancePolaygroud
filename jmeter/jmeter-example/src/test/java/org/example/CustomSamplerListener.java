@@ -13,11 +13,11 @@ import org.apache.jorphan.collections.SearchByClass;
 
 import java.net.MalformedURLException;
 // TODO fix or remove it, chatGPT can't write it
-public class CustomSampleListener implements SampleListener, LoopIterationListener {
+public class CustomSamplerListener implements SampleListener, LoopIterationListener {
 
     private StandardJMeterEngine engine;
 
-    public CustomSampleListener(StandardJMeterEngine engine) {
+    public CustomSamplerListener(StandardJMeterEngine engine) {
         this.engine = engine;
     }
 

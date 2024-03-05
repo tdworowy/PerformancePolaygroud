@@ -13,5 +13,8 @@ jupyter lab
 
 TODO
 - make reporter a standalone tool
+- add authentication to rest_api
+- add user generation
+- add login to tests
 
 
