@@ -1,5 +1,5 @@
 [db_config_content]
-host = "localhost"
+host = "192.168.50.76"
 user = "test"
 password = "test"
 dbname = "test"
