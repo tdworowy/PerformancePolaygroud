@@ -1,0 +1,9 @@
+docker compose up
+
+
+docker exec -it rest_api sh
+
+docker run --rm -it --entrypoint /bin/sh rest_api
+
+
+//TODO rest_api don't start from container

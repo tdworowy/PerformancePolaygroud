@@ -7,6 +7,8 @@ bin
 lib
 results
 target
+output
+.vagrant
 .vscode
 .ipynb_checkpoints
 .jtl

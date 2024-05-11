@@ -1,0 +1,5 @@
+FROM debian:latest
+WORKDIR /app
+COPY output/rest_api .
+COPY dbconfig.toml .
+ENTRYPOINT "./rest_api"

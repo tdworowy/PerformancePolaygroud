@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: "postgres"
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+        - /sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+  api:
+    image: "rest_api"
+    depends_on:
+      - postgres
+    links:
+      - postgres

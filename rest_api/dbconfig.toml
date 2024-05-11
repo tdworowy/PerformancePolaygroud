@@ -1,0 +1,5 @@
+[db_config_content]
+host = "localhost"
+user = "test"
+password = "test"
+dbname = "test"

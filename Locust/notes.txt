@@ -16,5 +16,6 @@ TODO
 - add authentication to rest_api
 - add user generation
 - add login to tests
+- setup some load-balancing
 
 
