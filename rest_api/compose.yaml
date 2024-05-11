@@ -9,7 +9,7 @@ services:
       - POSTGRES_DB=test
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-        - /sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+        - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
   api:
     image: "rest_api"
     ports:
