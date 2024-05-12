@@ -9,7 +9,13 @@ services:
       - POSTGRES_DB=test
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-        - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+        #- ./sql/:/docker-entrypoint-initdb.d
+         - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
   api:
     image: "rest_api"
     ports:
@@ -18,3 +24,10 @@ services:
       - postgres
     links:
       - postgres
+    healthcheck:
+        test: ["CMD", "curl", "-d", "'{\"field1\":\"test3333\", \"field2\":\"test3333\"}' -H \"content-type: application/json\" -X POST 192.168.50.76:8080/postData"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+
+
