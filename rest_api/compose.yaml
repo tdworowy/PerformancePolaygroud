@@ -24,9 +24,11 @@ services:
     links:
       - postgres
     healthcheck:
-        test: ["CMD", "curl", "-d", "'{\"field1\":\"test3333\", \"field2\":\"test3333\"}' -H \"content-type: application/json\" -X POST 192.168.50.76:8080/postData"]
+        test: ["CMD", "curl", "-d", '{"field1":"test3333", "field2":"test3333"}', "-H", "content-type: application/json", "-X", "POST", "http://192.168.50.76:8080/postData"]
+        #test: [ "CMD", "curl", "192.168.50.76:8080/randStr" ]
         interval: 10s
         timeout: 5s
         retries: 5
+        start_period: 10s
 
 

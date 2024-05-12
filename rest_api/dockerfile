@@ -2,4 +2,6 @@ FROM debian:latest
 WORKDIR /app
 COPY output/rest_api .
 COPY dbconfig.toml .
+RUN apt update -y
+RUN apt install curl -y
 ENTRYPOINT "./rest_api"
