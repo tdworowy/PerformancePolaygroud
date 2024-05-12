@@ -9,10 +9,9 @@ services:
       - POSTGRES_DB=test
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-        #- ./sql/:/docker-entrypoint-initdb.d
          - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      test: [ "CMD-SHELL",  pg_isready -U $$POSTGRES_USER" ]
       interval: 30s
       timeout: 10s
       retries: 5

@@ -5,7 +5,4 @@ docker exec -it rest_api sh
 
 docker run --rm -it --entrypoint /bin/sh rest_api
 
-
-//TODO find wtf is going on with posgress
-
  curl -d '{"field1":"test3333", "field2":"test3333"}' -H "content-type: application/json" -X POST 192.168.50.76:8080/postData
